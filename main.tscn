@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://bhisr6kus5mgv"]
+
+[ext_resource type="Texture2D" uid="uid://y8bk3xg2x4ti" path="res://Art/Background.JPG" id="1_q2mg3"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1917.0
+offset_bottom = 1083.0
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+offset_right = 1920.0
+offset_bottom = 1021.0
+texture = ExtResource("1_q2mg3")
+
+[node name="Button" type="Button" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.007
+anchor_top = 0.031
+anchor_right = 0.05
+anchor_bottom = 0.108
+offset_left = 0.580999
+offset_top = 0.426998
+offset_right = -0.849998
+offset_bottom = 0.0359955
