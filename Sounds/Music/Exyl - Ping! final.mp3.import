@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c8lvny5u8v1mb"
+path="res://.godot/imported/Exyl - Ping! final.mp3-67ba4fa10ebab1adf75f0ceb448470d5.mp3str"
+
+[deps]
+
+source_file="res://Sounds/Music/Exyl - Ping! final.mp3"
+dest_files=["res://.godot/imported/Exyl - Ping! final.mp3-67ba4fa10ebab1adf75f0ceb448470d5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0.0
+bpm=143.0
+beat_count=0
+bar_beats=4
