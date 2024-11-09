@@ -1,0 +1,130 @@
+[gd_scene load_steps=9 format=3 uid="uid://gyd67ksavbat"]
+
+[ext_resource type="Script" path="res://Scripts/Bullets/Laser.gd" id="1_t4g3s"]
+[ext_resource type="Texture2D" uid="uid://bgx8amcybms76" path="res://Art/Rectangle.png" id="2_m8g80"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lewiw"]
+friction = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n7i7e"]
+
+[sub_resource type="Animation" id="Animation_g0w58"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WarningContainer/WarningSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.501961)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WarningContainer/WarningSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 10)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("WarningContainer/WarningSprite:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.05, 0.00226528)]
+}
+
+[sub_resource type="Animation" id="Animation_2f0v5"]
+resource_name = "shot"
+
+[sub_resource type="Animation" id="Animation_28rux"]
+resource_name = "warning"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WarningContainer/WarningSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.25098), Color(1, 1, 1, 0.501961)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WarningContainer/WarningSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, 10), Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("WarningContainer/WarningSprite:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0.05, 0.00226528), Vector2(0.05, 0.05)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_af2gp"]
+_data = {
+"RESET": SubResource("Animation_g0w58"),
+"shoot": SubResource("Animation_2f0v5"),
+"warning": SubResource("Animation_28rux")
+}
+
+[node name="Laser" type="RigidBody2D"]
+collision_mask = 2
+mass = 0.001
+physics_material_override = SubResource("PhysicsMaterial_lewiw")
+gravity_scale = 0.0
+script = ExtResource("1_t4g3s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_n7i7e")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D"]
+visible = false
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_m8g80")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_af2gp")
+}
+
+[node name="DespawnTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[node name="WarningContainer" type="Node2D" parent="."]
+
+[node name="WarningSprite" type="Sprite2D" parent="WarningContainer"]
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(0, 10)
+scale = Vector2(0.05, 0.00226528)
+texture = ExtResource("2_m8g80")

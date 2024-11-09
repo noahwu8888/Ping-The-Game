@@ -1,0 +1,24 @@
+[gd_scene load_steps=9 format=3 uid="uid://cs2sxxhui7iac"]
+
+[ext_resource type="Texture2D" uid="uid://bdw8lpa4og5bq" path="res://icon.svg" id="1_nglaw"]
+[ext_resource type="Script" path="res://Scripts/Characters/boss_test.gd" id="1_s8wab"]
+[ext_resource type="PackedScene" uid="uid://d0apjdkbfeayu" path="res://Prefabs/Bullets/BaseBullet.tscn" id="2_0g634"]
+[ext_resource type="PackedScene" uid="uid://gyd67ksavbat" path="res://Prefabs/Bullets/BaseLaser.tscn" id="3_gj88i"]
+[ext_resource type="PackedScene" uid="uid://d1qkaniirxusj" path="res://Prefabs/Bullets/OrbitalBullet.tscn" id="4_7lj8w"]
+[ext_resource type="PackedScene" uid="uid://bgr01x5qpekhx" path="res://Prefabs/Bullets/DragBullet.tscn" id="5_db0k1"]
+[ext_resource type="PackedScene" uid="uid://bnvq32odtmlrf" path="res://Prefabs/Bullets/BaseShockwave.tscn" id="6_clfgg"]
+[ext_resource type="PackedScene" uid="uid://bne3jiiophop4" path="res://Prefabs/Bullets/OrbitalLaser.tscn" id="7_f1w2h"]
+
+[node name="Boss" type="Node2D" groups=["Listener"]]
+script = ExtResource("1_s8wab")
+bullet_dict = {
+"Base Bullet": ExtResource("2_0g634"),
+"Base Laser": ExtResource("3_gj88i"),
+"Base Shockwave": ExtResource("6_clfgg"),
+"Drag Bullet": ExtResource("5_db0k1"),
+"Orbital Bullet": ExtResource("4_7lj8w"),
+"Orbital Laser": ExtResource("7_f1w2h")
+}
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nglaw")

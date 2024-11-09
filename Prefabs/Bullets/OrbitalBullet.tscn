@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://d1qkaniirxusj"]
+
+[ext_resource type="Script" path="res://Scripts/Bullets/Orbital_Bullet.gd" id="1_tvw5f"]
+[ext_resource type="PackedScene" uid="uid://d0apjdkbfeayu" path="res://Prefabs/Bullets/BaseBullet.tscn" id="2_p4mne"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4i2l4"]
+
+[node name="OrbitalBullet" type="RigidBody2D"]
+collision_layer = 0
+collision_mask = 0
+mass = 0.001
+gravity_scale = 0.0
+script = ExtResource("1_tvw5f")
+bullet_prefab = ExtResource("2_p4mne")
+initial_velocity = Vector2(100, 100)
+despawn_time = 20
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_4i2l4")
+
+[node name="DespawnTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true

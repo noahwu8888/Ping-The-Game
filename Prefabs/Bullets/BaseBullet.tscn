@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0apjdkbfeayu"]
+
+[ext_resource type="Script" path="res://Scripts/Bullets/Bullet.gd" id="1_n24dl"]
+[ext_resource type="Texture2D" uid="uid://co8ump70o772c" path="res://Art/Circle.png" id="2_4wrl2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gyyow"]
+
+[node name="DefaultBullet" type="RigidBody2D" groups=["Bullet"]]
+collision_mask = 2
+gravity_scale = 0.0
+script = ExtResource("1_n24dl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gyyow")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("2_4wrl2")
+
+[node name="DespawnTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
