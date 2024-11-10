@@ -1,7 +1,7 @@
 class_name Bullet extends RigidBody2D
 
-@export var spawn_position = Vector2(0,0)
-@export var initial_velocity = Vector2(0,100)
+@export var spawn_position = Vector2(0,-100)
+@export var initial_velocity = Vector2(0,0)
 @export var despawn_time = 5
 
 @onready var despawn_timer_obj = $DespawnTimer

@@ -45,6 +45,7 @@ func _ready() -> void:
 	
 	anim_player.speed_scale = beat_length/warning_beats
 	anim_player.play("warning")
+	warning_container.visible = true
 	#connect Rhythm notifier
 	get_tree().root.get_node("main").get_node("RhythmNotifier").connect("beat", _on_beat_heard)
 

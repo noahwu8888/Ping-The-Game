@@ -13,7 +13,7 @@ extends Node2D
 @export_category("Laser Config")
 @export var beat_length = 0.839
 @export var despawn_time = 2
-@export var warning_beats = 4
+@export var warning_beats = 2
 @export var orbit_offset = Vector2(10,0)
 var beats = 0
 

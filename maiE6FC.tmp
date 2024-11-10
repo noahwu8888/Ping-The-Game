@@ -814,7 +814,7 @@ randomness = 0.51
 libraries = {
 "": SubResource("AnimationLibrary_yyqjv")
 }
-speed_scale = 1.191
+speed_scale = 0.839
 
 [node name="Player" parent="." instance=ExtResource("10_hpi1y")]
 visible = false

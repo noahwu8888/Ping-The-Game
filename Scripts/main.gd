@@ -65,6 +65,10 @@ func _beat_anim(beat:int):
 			boss_anim.play("RESET")
 		34:
 			boss_anim.play("spin")
+		35:
+			pass
+		41:
+			boss_anim.play("roar")
 func _beat_bullets(beat:int):
 	match beat:
 		14,15,16,17,18,19,20,21,22:
@@ -122,18 +126,17 @@ func _beat_bullets(beat:int):
 			
 			add_child.call(bullet_instance3)
 		34:
-			var bullet_instance = bullet_dict.get("Drag Bullet").instantiate()
-			bullet_instance.bullet_drag = .25
-			var args_arr = []
-			var bullet_speed = 300  # Adjust this speed as needed
-			for i in range(16):
-				# Calculate the angle for each bullet (in radians)
-				var angle = i * TAU / 16  # TAU is 2 * PI, so this divides the circle into 16 parts
-				# Calculate the velocity vector for this angle
-				var velocity = Vector2(cos(angle), sin(angle)) * bullet_speed
-				# Add the position and velocity to the args array
-				args_arr.append([boss.position, velocity, 4])
-			_subdivide_beat("initialize", bullet_instance, 16, args_arr)
+			var num_bullets = 40
+			var radius_vector = Vector2(1, 0)
+			var arc_length = 1
+			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
+			var args_arr = [[bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3],[bullet_reference, num_bullets, Vector2(1,1), arc_length, boss.position, 600, 3]]
+			_subdivide_beat("shoot_bullets_in_arc", bullet_reference, 2, args_arr)
+		39:
+			var bullet_instance = bullet_dict.get("Orbital Laser").instantiate()
+			bullet_instance.position = screen_center.position
+			bullet_instance._initialize_orbital_laser(6,1.0, 0.839, beat_length, 2, Vector2(5, 5))
+			add_child.call(bullet_instance)
 		
 """
 10 - 22: Build-up
@@ -169,7 +172,7 @@ func shoot_bullets_in_arc(bullet_reference, num_bullets: int, start_direction: V
 		bullet_instance.initialize(start_pos, direction * speed, bullet_life)
 		
 		# Add bullet to the scene
-		add_child(bullet_instance)
+		add_child.call_deferred(bullet_instance)
 
 
 func _delay_shoot(function_name: String, bullet_instance, wait_for: float, args_array: Array) -> void:
@@ -179,8 +182,11 @@ func _delay_shoot(function_name: String, bullet_instance, wait_for: float, args_
 	add_child(timer)
 	timer.start()
 	await timer.timeout
-	bullet_instance.callv(function_name, args_array)
-	add_child(bullet_instance)
+	if function_name == "shoot_bullets_in_arc":
+		callv(function_name, args_array)
+	else:
+		bullet_instance.callv(function_name, args_array)
+	add_child.call_deferred(bullet_instance)
 
 func _subdivide_beat(function_name: String, bullet, subdivide_times: int, args_array_of_arrays: Array) -> void:
 	# Ensure the args_array_of_arrays has the correct length
@@ -194,9 +200,12 @@ func _subdivide_beat(function_name: String, bullet, subdivide_times: int, args_a
 		var bullet_instance = bullet.duplicate()
 		
 		if i == 0:
+			if function_name == "shoot_bullets_in_arc":
+				callv(function_name, args_array_of_arrays[i])
 			# Call the function immediately for the first beat with the given args
-			bullet_instance.callv(function_name, args_array_of_arrays[i])
-			add_child(bullet_instance)
+			else:
+				bullet_instance.callv(function_name, args_array_of_arrays[i])
+				add_child(bullet_instance)
 		else:
 			# Call _delay_shoot for subsequent beats with delay
 			_delay_shoot(function_name, bullet_instance, interval * i, args_array_of_arrays[i])
