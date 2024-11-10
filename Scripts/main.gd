@@ -75,6 +75,8 @@ func _beat_anim(beat:int):
 		41:
 			anim_player.play("41-42")
 			boss_anim.play("roar")
+		42:
+			flash.flash_screen()
 		43:
 			anim_player.play("43-46")
 			boss_anim.play("spin")
@@ -91,7 +93,15 @@ func _beat_anim(beat:int):
 			boss_collision.disabled = false
 		49:
 			boss_anim.play("bounce")
+		
+		54:
+			boss_anim.play("spin")
 			
+		56:
+			anim_player.play("57-59")
+		
+		59:
+			flash.flash_screen()
 			
 func _beat_bullets(beat:int):
 	match beat:
@@ -216,25 +226,31 @@ func _beat_bullets(beat:int):
 			add_child.call(bullet_instance)
 		
 		49:
-			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
-			var spawn_pos = Vector2(0,player.position.y)
-			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 90, .5, 1)
-			add_child.call(bullet_instance)
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_center.position.x, 0)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 90, beat_length, 1)
+			add_child.call(bullet_instance3)
 		50:
-			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
-			var spawn_pos = Vector2(player.position.x, 0)
-			bullet_instance.initialize(.839, spawn_pos ,Vector2(10,10), 180, .5, 1)
-			add_child.call(bullet_instance)
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_size.x, screen_center.position.y)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 180, beat_length, 1)
+			add_child.call(bullet_instance3)
 		51:
-			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
-			var spawn_pos = Vector2(screen_size.x,player.position.y)
-			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 270, .5, 1)
-			add_child.call(bullet_instance)
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_center.position.x, screen_size.y)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 270, beat_length, 1)
+			add_child.call(bullet_instance3)
 		52:
-			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
-			var spawn_pos = Vector2(player.position.x,screen_size.y)
-			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 0, .5, 1)
-			add_child.call(bullet_instance)
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(0, screen_center.position.y)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 0, beat_length, 1)
+		54:
+			var num_bullets = 80
+			var radius_vector = Vector2(1, 0)
+			var arc_length = 1
+			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
+			var args_arr = [[bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3],[bullet_reference, num_bullets, Vector2(1,1), arc_length, boss.position, 600, 3]]
+			_subdivide_beat("shoot_bullets_in_arc", bullet_reference, 2, args_arr)
 		
 func _beat_bullets2(beat:int):
 	match beat:
@@ -305,6 +321,9 @@ func _beat_bullets2(beat:int):
 42.5: ping
 43: COME BACK SWINGING
 46: call
+
+54: call again
+57: end
 """
 # bullet_reference should be a preconfigured bullet,
 # start_direction will be where the first bullet is shot from

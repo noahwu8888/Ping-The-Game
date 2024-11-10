@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=4 uid="uid://bhisr6kus5mgv"]
+[gd_scene load_steps=44 format=4 uid="uid://bhisr6kus5mgv"]
 
 [ext_resource type="Script" path="res://Scripts/main.gd" id="1_0spgk"]
 [ext_resource type="Texture2D" uid="uid://y8bk3xg2x4ti" path="res://Art/Background.JPG" id="1_q2mg3"]
@@ -879,6 +879,83 @@ tracks/3/keys = {
 "values": [false]
 }
 
+[sub_resource type="Animation" id="Animation_ryw5p"]
+resource_name = "57-59"
+length = 2.0
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Boss:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.75, 1, 2),
+"transitions": PackedFloat32Array(1, 1.5, 0.2, 1),
+"update": 0,
+"values": [Vector2(960, 540), Vector2(960, 540), Vector2(960, 460), Vector2(960, 1272)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Boss:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Boss:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, 2)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Boss:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Boss/CollisionShape2D:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Boss:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_811l0"]
 _data = {
 "13-24": SubResource("Animation_huid2"),
@@ -887,6 +964,7 @@ _data = {
 "41-42": SubResource("Animation_u00jt"),
 "43-46": SubResource("Animation_bdpfn"),
 "47-49": SubResource("Animation_p1isp"),
+"57-59": SubResource("Animation_ryw5p"),
 "8-12": SubResource("Animation_1cwiu"),
 "RESET": SubResource("Animation_cjv6v"),
 "died": SubResource("Animation_ujk22")
@@ -931,6 +1009,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1917.0
 offset_bottom = 1083.0
+scale = Vector2(1, 1.06)
 
 [node name="TextureRect" type="TextureRect" parent="MainMenu"]
 layout_mode = 1

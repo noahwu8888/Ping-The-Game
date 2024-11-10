@@ -42,7 +42,7 @@ func _ready() -> void:
 		laser.rotation = angle + PI / 2  # Face outward
 		
 		# Initialize laser parameters
-		laser.initialize(beat_length,global_position,Vector2(total_scale.x,total_scale.y * 2),laser.rotation_degrees,despawn_time + 1,warning_beats)
+		laser.initialize(beat_length,global_position,total_scale,laser.rotation_degrees,despawn_time + 1,warning_beats)
 		
 		# Add laser to the scene and store its reference and angle for orbiting
 		add_child(laser)
