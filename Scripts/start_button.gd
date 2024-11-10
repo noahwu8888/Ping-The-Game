@@ -110,7 +110,8 @@ func _check_has_started():
 		success_window = false
 		late_timer.stop()
 		var new_color = 1.0 - float(success_count) / 9
-		background.self_modulate = Color(new_color,new_color,new_color)
+		if(success_count > 3):
+			background.self_modulate = Color(new_color,new_color,new_color)
 		if (success_count == 9):
 			emit_signal("start_fight")
 			self.visible = false

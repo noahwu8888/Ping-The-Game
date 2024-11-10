@@ -9,6 +9,7 @@ var screen_size: Vector2
 @onready var music_player = $MusicPlayer
 @onready var main_menu = $MainMenu
 @onready var boss = $Boss
+@onready var boss_collision = $Boss/CollisionShape2D
 @onready var boss_anim = $Boss/AnimationPlayer
 @onready var anim_player = $AnimationPlayer
 @onready var player = $Player
@@ -24,6 +25,7 @@ var screen_size: Vector2
 func _ready() -> void:
 	screen_size = get_viewport().get_visible_rect().size
 	print("Screen size:", screen_size)
+	boss_anim.speed_scale = 1.191
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,7 +40,8 @@ func _start_fight():
 func _on_beat_heard(beat:int):
 	_beat_anim(beat)
 	_beat_bullets(beat)
-	print(beat)
+	_beat_bullets2(beat)
+	#print(beat)
 			
 func _beat_anim(beat:int):
 	match beat:
@@ -51,32 +54,54 @@ func _beat_anim(beat:int):
 			boss_anim.play("shake")
 		23:
 			boss_anim.play("RESET")
+			boss.visible = true
+			boss_collision.disabled = false
 		25:
 			flash.flash_screen()
 			anim_player.play("25-26")
 			boss_anim.play("roar")
-		26:
-			boss.visible = false
 		32:
 			boss.visible = true
 			anim_player.play("32-34")
 			boss_anim.play("loop_spin")
 		33:
 			boss_anim.play("RESET")
+			boss.visible = true
+			boss_collision.disabled = false
 		34:
+			boss_anim.play("bounce")
+		38:
 			boss_anim.play("spin")
-		35:
-			pass
 		41:
+			anim_player.play("41-42")
 			boss_anim.play("roar")
+		43:
+			anim_player.play("43-46")
+			boss_anim.play("spin")
+		44,45,46:
+			boss_anim.stop()
+			boss_anim.play("spin")
+		47:
+			boss.visible = true
+			boss_anim.play("loop_spin")
+			anim_player.play("47-49")
+		48:
+			boss_anim.play("RESET")
+			boss.visible = true
+			boss_collision.disabled = false
+		49:
+			boss_anim.play("bounce")
+			
+			
 func _beat_bullets(beat:int):
 	match beat:
 		14,15,16,17,18,19,20,21,22:
 			var num_bullets = 40
-			var radius_vector = Vector2(1, 0)
+			var radius_vector = screen_center.position - player.position
 			var arc_length = 1
 			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
 			shoot_bullets_in_arc(bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3)
+			
 		23:
 			var bullet_instance = bullet_dict.get("Base Shockwave").instantiate()
 			bullet_instance.initialize(.839, screen_center.position, Vector2(60,60),20, 0, 1, beat_length, 2)
@@ -106,26 +131,32 @@ func _beat_bullets(beat:int):
 		29:
 			var bullet_instance = bullet_dict.get("Async Shockwave").instantiate()
 			var args_arr = [
-				[beat_length, screen_center.position + Vector2(-500,-250), Vector2(20,20),.5, .5, 1.5, beat_length*2, 1],
-				[beat_length, screen_center.position + Vector2(500,250), Vector2(20,20),.5, .75, 1.5, beat_length*1.75, 1],
-				[beat_length, screen_center.position + Vector2(-500,250), Vector2(20,20),.5, 1.0, 1.5, beat_length*1.5, 1],
-				[beat_length, screen_center.position + Vector2(500,-250), Vector2(20,20),.5, 1.25, 1.5, beat_length*1.25, 1]]
+				[beat_length, screen_center.position + Vector2(-500,-250), Vector2(30,30),.5, .5, 1.5, beat_length*1, 1],
+				[beat_length, screen_center.position + Vector2(500,250), Vector2(30,30),.5, .75, 1.5, beat_length*.75, 1],
+				[beat_length, screen_center.position + Vector2(-500,250), Vector2(30,30),.5, 1.0, 1.5, beat_length*.5, 1],
+				[beat_length, screen_center.position + Vector2(500,-250), Vector2(30,30),.5, 1.25, 1.5, beat_length*.25, 1]]
 			_subdivide_beat("initialize",bullet_instance, 4, args_arr)
 		31:
 			var bullet_instance = bullet_dict.get("Orbital Bullet").instantiate()
-			bullet_instance._initialize_orbital_bullet(200, 5, 4)
-			bullet_instance.initialize(Vector2(200,0),Vector2(0,400),4)
+			bullet_instance._initialize_orbital_bullet(200, 5, 8)
+			bullet_instance.initialize(Vector2(0,200),Vector2(600, 0),4)
 			add_child(bullet_instance)
 			var bullet_instance2 = bullet_dict.get("Orbital Bullet").instantiate()
-			bullet_instance2._initialize_orbital_bullet(200, 5, 4)
-			bullet_instance2.initialize(Vector2(screen_size.x - 200, screen_size.y),Vector2(0,-400),4)
+			bullet_instance2._initialize_orbital_bullet(200, 5, 8)
+			bullet_instance2.initialize(Vector2(screen_size.x, screen_size.y - 200),Vector2(-600,0),4)
 			add_child(bullet_instance2)
 			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
 			var spawn_pos = screen_center.position
 			bullet_instance3.initialize(.839, spawn_pos,Vector2(20,2000), 90, 0.0001, 1)
 			
 			add_child.call(bullet_instance3)
-		34:
+		
+		35,36,37:
+			var bullet_instance = bullet_dict.get("Orbital Bullet").instantiate()
+			bullet_instance._initialize_orbital_bullet(200, 4, 4)
+			bullet_instance.initialize(boss.position, (player.position-boss.position).normalized()*500 , 4)
+			add_child(bullet_instance)
+		38:
 			var num_bullets = 40
 			var radius_vector = Vector2(1, 0)
 			var arc_length = 1
@@ -137,7 +168,127 @@ func _beat_bullets(beat:int):
 			bullet_instance.position = screen_center.position
 			bullet_instance._initialize_orbital_laser(6,1.0, 0.839, beat_length, 2, Vector2(5, 5))
 			add_child.call(bullet_instance)
+		41:
+			var bullet_instance = bullet_dict.get("Async Shockwave").instantiate()
+			_delay_shoot("initialize",bullet_instance,beat_length/2,[beat_length, screen_center.position, Vector2(30,30),20, .5, 1.5, beat_length/2, 1])
+		42:
+			var num_bullets = 40
+			var radius_vector = Vector2(1, 0)
+			var arc_length = 1
+			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
+			bullet_reference.scale = Vector2(5,5)
+			_delay_shoot("shoot_bullets_in_arc",bullet_reference,beat_length/2, [bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 800, 3])
+
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_center.position.x, 0)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 90, 0.0001, 1)
+			add_child.call(bullet_instance3)
+		43:
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_size.x, screen_center.position.y)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 180, 0.0001, 1)
+			add_child.call(bullet_instance3)
+		44:
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_center.position.x, screen_size.y)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 270, 0.0001, 1)
+			add_child.call(bullet_instance3)
+		45:
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(0, screen_center.position.y)
+			bullet_instance3.initialize(.839, spawn_pos ,Vector2(20,2000), 0, 0.0001, 1)
+			
+			add_child.call(bullet_instance3)
+			var bullet_instance = bullet_dict.get("Async Shockwave").instantiate()
+			var args_arr = [
+				[beat_length, screen_center.position + Vector2(-500,-250), Vector2(30,30),.5, .5, 1.5, beat_length*1, 1],
+				[beat_length, screen_center.position + Vector2(500,250), Vector2(30,30),.5, .75, 1.5, beat_length*.75, 1],
+				[beat_length, screen_center.position + Vector2(-500,250), Vector2(30,30),.5, 1.0, 1.5, beat_length*.5, 1],
+				[beat_length, screen_center.position + Vector2(500,-250), Vector2(30,30),.5, 1.25, 1.5, beat_length*.25, 1]]
+			_subdivide_beat("initialize",bullet_instance, 4, args_arr)
+		46:
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = screen_center.position
+			bullet_instance3.initialize(.839, spawn_pos,Vector2(20,2000), 90, 0.0001, 1)
+		47:
+			var bullet_instance = bullet_dict.get("Base Shockwave").instantiate()
+			bullet_instance.initialize(.839, screen_center.position, Vector2(40,40),20, 0, 1, beat_length, 2)
+			add_child.call(bullet_instance)
 		
+		49:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(0,player.position.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 90, .5, 1)
+			add_child.call(bullet_instance)
+		50:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(player.position.x, 0)
+			bullet_instance.initialize(.839, spawn_pos ,Vector2(10,10), 180, .5, 1)
+			add_child.call(bullet_instance)
+		51:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_size.x,player.position.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 270, .5, 1)
+			add_child.call(bullet_instance)
+		52:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(player.position.x,screen_size.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 0, .5, 1)
+			add_child.call(bullet_instance)
+		
+func _beat_bullets2(beat:int):
+	match beat:
+		33:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(0,player.position.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 90, .5, 1)
+			add_child.call(bullet_instance)
+		34:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(player.position.x, 0)
+			bullet_instance.initialize(.839, spawn_pos ,Vector2(10,10), 180, .5, 1)
+			add_child.call(bullet_instance)
+		35:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_size.x,player.position.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 270, .5, 1)
+			add_child.call(bullet_instance)
+		36:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(player.position.x,screen_size.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(10,10), 0, .5, 1)
+			add_child.call(bullet_instance)
+		43,44,45,46:
+			#var bullet_instance = bullet_dict.get("Orbital Bullet").instantiate()
+			#bullet_instance._initialize_orbital_bullet(200, 4, 4)
+			#bullet_instance.initialize(boss.position, (player.position-boss.position).normalized()*500 , 4)
+			#add_child(bullet_instance)
+			
+			var num_bullets = 10
+			var radius_vector = screen_center.position - player.position
+			var arc_length = 1
+			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
+			shoot_bullets_in_arc(bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3)
+			
+		49,50,51,52:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			# Calculate the angle to point the laser directly at the player
+			var spawn_rotation_degrees = (player.position - screen_center.position).angle() * 180 / PI + 90
+			print(spawn_rotation_degrees)
+			# Initialize the laser with the calculated rotation
+			bullet_instance.initialize(.839, screen_center.position, Vector2(1, 10), spawn_rotation_degrees, .5, 1)
+			add_child(bullet_instance)
+			
+			var bullet_instance2 = bullet_dict.get("Orbital Bullet").instantiate()
+			bullet_instance2._initialize_orbital_bullet(200, 4, 4)
+			bullet_instance2.initialize(boss.position, (player.position-boss.position).normalized()*500 , 4)
+			add_child(bullet_instance2)
+		53:
+			var bullet_instance2 = bullet_dict.get("Orbital Bullet").instantiate()
+			bullet_instance2._initialize_orbital_bullet(200, 4, 4)
+			bullet_instance2.initialize(boss.position, (player.position-boss.position).normalized()*500 , 4)
+			add_child(bullet_instance2)
+
 """
 10 - 22: Build-up
 23 - 24: Drop nyoooom
