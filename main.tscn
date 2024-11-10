@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://bhisr6kus5mgv"]
+[gd_scene load_steps=39 format=4 uid="uid://bhisr6kus5mgv"]
 
 [ext_resource type="Script" path="res://Scripts/main.gd" id="1_0spgk"]
 [ext_resource type="Texture2D" uid="uid://y8bk3xg2x4ti" path="res://Art/Background.JPG" id="1_q2mg3"]
@@ -20,6 +20,21 @@
 [ext_resource type="PackedScene" uid="uid://b0ohgmrm5bjel" path="res://Prefabs/Player.tscn" id="10_hpi1y"]
 [ext_resource type="Texture2D" uid="uid://co8ump70o772c" path="res://Art/Circle.png" id="16_42pn7"]
 
+[sub_resource type="Animation" id="Animation_1t28k"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_ef47q"]
 resource_name = "flash"
 length = 0.1
@@ -35,21 +50,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(0.277392, 2.14355, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.705882), Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_1t28k"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_y72ib"]
@@ -78,58 +78,6 @@ angular_velocity_max = 720.0
 scale_min = 0.03
 scale_max = 0.03
 color = Color(1, 1, 1, 0.5)
-
-[sub_resource type="Animation" id="Animation_fbi17"]
-resource_name = "roar"
-step = 0.0416667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.958333, 1),
-"transitions": PackedFloat32Array(0.1, 1, 0.1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(2, 2), Vector2(1, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("GPUParticles2D:emitting")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.958333, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [true, true, false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:self_modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.958333, 1),
-"transitions": PackedFloat32Array(0.1, 1, 0.1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(0.990015, 0.658346, 0.628827, 1), Color(1, 1, 1, 1)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite2D:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.166667, 0.208333, 0.25, 0.291667, 0.333333, 0.375, 0.416667, 0.458333, 0.5, 0.541667, 0.583333, 0.625, 0.666667, 0.708333, 0.75, 0.791667, 0.833333, 0.875, 0.916667, 0.958333, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.0]
-}
 
 [sub_resource type="Animation" id="Animation_q4avn"]
 length = 0.001
@@ -203,7 +151,76 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.174533]
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_fbi17"]
+resource_name = "roar"
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.958333, 1),
+"transitions": PackedFloat32Array(0.1, 1, 0.1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(2, 2), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GPUParticles2D:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.958333, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.958333, 1),
+"transitions": PackedFloat32Array(0.1, 1, 0.1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.990015, 0.658346, 0.628827, 1), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.208333, 0.25, 0.291667, 0.333333, 0.375, 0.416667, 0.458333, 0.5, 0.541667, 0.583333, 0.625, 0.666667, 0.708333, 0.75, 0.791667, 0.833333, 0.875, 0.916667, 0.958333, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.349066, 0.314159, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_b4d61"]
+resource_name = "shake"
+loop_mode = 1
+step = 0.0417
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0417, 0.0834, 0.1251, 0.1668, 0.2085, 0.2502, 0.2919, 0.3336, 0.3753, 0.417, 0.4587, 0.5004, 0.5421, 0.5838, 0.6255, 0.6672, 0.7089, 0.7506, 0.7923, 0.834, 0.8757, 0.9174, 0.9591),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533]
 }
 
 [sub_resource type="Animation" id="Animation_xwetf"]
@@ -246,34 +263,100 @@ tracks/2/keys = {
 "values": [0.0]
 }
 
-[sub_resource type="Animation" id="Animation_b4d61"]
-resource_name = "shake"
+[sub_resource type="Animation" id="Animation_jtafk"]
+resource_name = "loop_spin"
 loop_mode = 1
-step = 0.0417
+step = 0.0416667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
+tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0417, 0.0834, 0.1251, 0.1668, 0.2085, 0.2502, 0.2919, 0.3336, 0.3753, 0.417, 0.4587, 0.5004, 0.5421, 0.5838, 0.6255, 0.6672, 0.7089, 0.7506, 0.7923, 0.834, 0.8757, 0.9174, 0.9591),
+"times": PackedFloat32Array(0, 0.041666, 0.083333, 0.125, 0.166666, 0.208333, 0.25, 0.291666, 0.333334, 0.375, 0.416667, 0.458334, 0.5, 0.541667, 0.583334, 0.625, 0.666667, 0.708333, 0.75, 0.791667, 0.833333, 0.875, 0.916667, 0.958333),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [13, 14, 15, 11, 12, 13, 14, 15, 13, 14, 15, 11, 12, 13, 14, 15, 13, 14, 15, 11, 12, 13, 14, 15]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [-0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533, -0.0174533, 0.0174533]
+"values": [Color(0.990015, 0.658346, 0.628827, 1), Color(0.990015, 0.658346, 0.628827, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yyqjv"]
 _data = {
 "RESET": SubResource("Animation_q4avn"),
+"loop_spin": SubResource("Animation_jtafk"),
 "roar": SubResource("Animation_fbi17"),
 "shake": SubResource("Animation_b4d61"),
 "spin": SubResource("Animation_xwetf")
 }
 
-[sub_resource type="Animation" id="Animation_cjv6v"]
-resource_name = "RESET"
-length = 0.001
+[sub_resource type="Animation" id="Animation_huid2"]
+resource_name = "13-24"
+length = 11.0
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Boss:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 9, 9.25, 10),
+"transitions": PackedFloat32Array(1, 0.517632, 5.46417, 1),
+"update": 0,
+"values": [Vector2(960, -162), Vector2(960, 253), Vector2(960, 194), Vector2(960, 1271)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Boss:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1.51571),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Boss/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_pgocc"]
+resource_name = "25-26"
+step = 0.25
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -329,10 +412,10 @@ tracks/4/path = NodePath("Boss/CollisionShape2D:disabled")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [true]
+"values": [false, true]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -341,63 +424,10 @@ tracks/5/path = NodePath("Boss:visible")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Flash:color")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_huid2"]
-resource_name = "13-24"
-length = 11.0
-step = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Boss:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 9, 9.25, 10),
-"transitions": PackedFloat32Array(1, 0.517632, 5.46417, 1),
-"update": 0,
-"values": [Vector2(960, -162), Vector2(960, 253), Vector2(960, 194), Vector2(960, 1271)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Boss:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1.51571),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Boss/CollisionShape2D:disabled")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_1cwiu"]
@@ -477,8 +507,9 @@ tracks/5/keys = {
 "values": [true]
 }
 
-[sub_resource type="Animation" id="Animation_pgocc"]
-resource_name = "25-26"
+[sub_resource type="Animation" id="Animation_cjv6v"]
+resource_name = "RESET"
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -534,10 +565,10 @@ tracks/4/path = NodePath("Boss/CollisionShape2D:disabled")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false, true]
+"values": [false]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -546,10 +577,22 @@ tracks/5/path = NodePath("Boss:visible")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true, false]
+"values": [true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Flash:color")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_ujk22"]
@@ -583,10 +626,64 @@ tracks/1/keys = {
 "values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_ktgsx"]
+resource_name = "32-34"
+length = 3.0
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Boss:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Boss:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.75, 1.875, 2),
+"transitions": PackedFloat32Array(0.3, 0.3, 3, 0.1, 0.1, 1),
+"update": 0,
+"values": [Vector2(-230, 540), Vector2(2300, 540), Vector2(-230, 540), Vector2(960, 400), Vector2(960, 400), Vector2(960, 540)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Boss:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 1.75, 1.875, 2),
+"transitions": PackedFloat32Array(1, 3, 0.1, 0.1, 1),
+"update": 0,
+"values": [Vector2(2, 2), Vector2(2, 2), Vector2(2.5, 2.5), Vector2(2.5, 2.5), Vector2(2, 2)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Boss/CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_811l0"]
 _data = {
 "13-24": SubResource("Animation_huid2"),
 "25-26": SubResource("Animation_pgocc"),
+"32-34": SubResource("Animation_ktgsx"),
 "8-12": SubResource("Animation_1cwiu"),
 "RESET": SubResource("Animation_cjv6v"),
 "died": SubResource("Animation_ujk22")
@@ -691,7 +788,6 @@ one_shot = true
 position = Vector2(960, 540)
 
 [node name="Boss" type="Area2D" parent="."]
-visible = false
 position = Vector2(960, 540)
 scale = Vector2(2, 2)
 collision_mask = 3
@@ -699,7 +795,6 @@ collision_mask = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boss"]
 scale = Vector2(9, 8.05)
 shape = SubResource("CircleShape2D_0mcl4")
-disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Boss"]
 z_index = 2

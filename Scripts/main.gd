@@ -57,7 +57,14 @@ func _beat_anim(beat:int):
 			boss_anim.play("roar")
 		26:
 			boss.visible = false
-
+		32:
+			boss.visible = true
+			anim_player.play("32-34")
+			boss_anim.play("loop_spin")
+		33:
+			boss_anim.play("RESET")
+		34:
+			boss_anim.play("spin")
 func _beat_bullets(beat:int):
 	match beat:
 		14,15,16,17,18,19,20,21,22:
@@ -95,11 +102,38 @@ func _beat_bullets(beat:int):
 		29:
 			var bullet_instance = bullet_dict.get("Async Shockwave").instantiate()
 			var args_arr = [
-				[beat_length, screen_center + Vector2(-500,-500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2],
-				[beat_length, screen_center + Vector2(500,500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2],
-				[beat_length, screen_center + Vector2(-500,500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2],
-				[beat_length, screen_center + Vector2(500,-500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2]]
+				[beat_length, screen_center.position + Vector2(-500,-250), Vector2(20,20),.5, .5, 1.5, beat_length*2, 1],
+				[beat_length, screen_center.position + Vector2(500,250), Vector2(20,20),.5, .75, 1.5, beat_length*1.75, 1],
+				[beat_length, screen_center.position + Vector2(-500,250), Vector2(20,20),.5, 1.0, 1.5, beat_length*1.5, 1],
+				[beat_length, screen_center.position + Vector2(500,-250), Vector2(20,20),.5, 1.25, 1.5, beat_length*1.25, 1]]
 			_subdivide_beat("initialize",bullet_instance, 4, args_arr)
+		31:
+			var bullet_instance = bullet_dict.get("Orbital Bullet").instantiate()
+			bullet_instance._initialize_orbital_bullet(200, 5, 4)
+			bullet_instance.initialize(Vector2(200,0),Vector2(0,400),4)
+			add_child(bullet_instance)
+			var bullet_instance2 = bullet_dict.get("Orbital Bullet").instantiate()
+			bullet_instance2._initialize_orbital_bullet(200, 5, 4)
+			bullet_instance2.initialize(Vector2(screen_size.x - 200, screen_size.y),Vector2(0,-400),4)
+			add_child(bullet_instance2)
+			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = screen_center.position
+			bullet_instance3.initialize(.839, spawn_pos,Vector2(20,2000), 90, 0.0001, 1)
+			
+			add_child.call(bullet_instance3)
+		34:
+			var bullet_instance = bullet_dict.get("Drag Bullet").instantiate()
+			bullet_instance.bullet_drag = .25
+			var args_arr = []
+			var bullet_speed = 300  # Adjust this speed as needed
+			for i in range(16):
+				# Calculate the angle for each bullet (in radians)
+				var angle = i * TAU / 16  # TAU is 2 * PI, so this divides the circle into 16 parts
+				# Calculate the velocity vector for this angle
+				var velocity = Vector2(cos(angle), sin(angle)) * bullet_speed
+				# Add the position and velocity to the args array
+				args_arr.append([boss.position, velocity, 4])
+			_subdivide_beat("initialize", bullet_instance, 16, args_arr)
 		
 """
 10 - 22: Build-up
@@ -107,8 +141,10 @@ func _beat_bullets(beat:int):
 25: DROP
 26.5: ping
 30: call
+32: fly across the screen
+33: stop
 
-34.5: leave sound (quiet)
+35.5: leave sound (quiet)
 38: call
 
 41: DROP 2 (lasers prolly)
