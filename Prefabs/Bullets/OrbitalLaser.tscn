@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://gyd67ksavbat" path="res://Prefabs/Bullets/BaseLaser.tscn" id="2_qs8am"]
 
 [node name="OrbitalLaser" type="Node2D" groups=["Bullet"]]
+z_index = 2
 script = ExtResource("1_8toj6")
 laser_prefab = ExtResource("2_qs8am")
 
