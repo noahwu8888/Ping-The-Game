@@ -3,8 +3,10 @@ extends Node2D
 @export var bullet_dict: Dictionary = {}
 
 @export var beat_length = 0.839
+var screen_size: Vector2
 
 
+@onready var music_player = $MusicPlayer
 @onready var main_menu = $MainMenu
 @onready var boss = $Boss
 @onready var boss_anim = $Boss/AnimationPlayer
@@ -20,7 +22,8 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	screen_size = get_viewport().get_visible_rect().size
+	print("Screen size:", screen_size)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,16 +61,46 @@ func _beat_anim(beat:int):
 func _beat_bullets(beat:int):
 	match beat:
 		14,15,16,17,18,19,20,21,22:
-			var num_bullets = 10
+			var num_bullets = 40
 			var radius_vector = Vector2(1, 0)
-			var arc_length = .6
+			var arc_length = 1
 			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
-			#bullet_reference._initialize_orbital_bullet(200, 2, 8)
 			shoot_bullets_in_arc(bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3)
 		23:
 			var bullet_instance = bullet_dict.get("Base Shockwave").instantiate()
 			bullet_instance.initialize(.839, screen_center.position, Vector2(60,60),20, 0, 1, beat_length, 2)
 			add_child.call(bullet_instance)
+		26:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(0,player.position.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(20,20), 90, .5, 1)
+			add_child.call(bullet_instance)
+			
+			var num_bullets = 20
+			var radius_vector = Vector2(1, 0)
+			var arc_length = 1
+			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
+			bullet_reference.scale = Vector2(5,5)
+			shoot_bullets_in_arc(bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3)
+		27:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(player.position.x, 0)
+			bullet_instance.initialize(.839, spawn_pos ,Vector2(20,20), 180, .5, 1)
+			add_child.call(bullet_instance)
+		28:
+			var bullet_instance = bullet_dict.get("Base Laser").instantiate()
+			var spawn_pos = Vector2(screen_size.x,player.position.y)
+			bullet_instance.initialize(.839, spawn_pos,Vector2(20,20), 270, .5, 1)
+			add_child.call(bullet_instance)
+		29:
+			var bullet_instance = bullet_dict.get("Async Shockwave").instantiate()
+			var args_arr = [
+				[beat_length, screen_center + Vector2(-500,-500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2],
+				[beat_length, screen_center + Vector2(500,500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2],
+				[beat_length, screen_center + Vector2(-500,500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2],
+				[beat_length, screen_center + Vector2(500,-500), Vector2(20,20),20, .5, 1.5, beat_length*2, 2]]
+			_subdivide_beat("initialize",bullet_instance, 4, args_arr)
+		
 """
 10 - 22: Build-up
 23 - 24: Drop nyoooom
@@ -102,45 +135,37 @@ func shoot_bullets_in_arc(bullet_reference, num_bullets: int, start_direction: V
 		# Add bullet to the scene
 		add_child(bullet_instance)
 
-func _spawn(direction: Vector2):
-	var bullet_instance = bullet_dict.get("Base Bullet").instantiate()
-	bullet_instance.spawn_position = boss.position
-	bullet_instance.initial_velocity = direction
-	add_child.call(bullet_instance)
 
-func _delay_shoot(function:Callable, bullet_instance, wait_for: float, args_array: Array) -> void:
+func _delay_shoot(function_name: String, bullet_instance, wait_for: float, args_array: Array) -> void:
 	var timer = Timer.new()
 	timer.wait_time = wait_for
 	timer.one_shot = true
 	add_child(timer)
 	timer.start()
 	await timer.timeout
-	function.callv(args_array)
+	bullet_instance.callv(function_name, args_array)
 	add_child(bullet_instance)
 
-func subdivide_beat(function: Callable, subdivide_times: int, args_array: Array) -> void:
-	# Ensure the args_array has the correct length
-	assert(args_array.size() == subdivide_times, "args_array must have the same number of elements as subdivide_times.")
+func _subdivide_beat(function_name: String, bullet, subdivide_times: int, args_array_of_arrays: Array) -> void:
+	# Ensure the args_array_of_arrays has the correct length
+	assert(args_array_of_arrays.size() == subdivide_times, "args_array_of_arrays must have the same number of elements as subdivide_times.")
 	
 	# Calculate the time interval for each subdivision
 	var interval = beat_length / subdivide_times
 	
-	# Create a timer to handle the subdivisions
-	var timer = Timer.new()
-	timer.wait_time = interval
-	timer.one_shot = true
-	add_child(timer)  # Add timer to the scene to ensure it works correctly
-	
 	for i in range(subdivide_times):
-		# Start the timer and await its timeout signal
-		timer.start()
-		await timer.timeout
+		# Duplicate bullet instance for each subdivision
+		var bullet_instance = bullet.duplicate()
 		
-		# Call the provided function with the specific arguments for this subdivision
-		function.callv(args_array[i])
-		
-	# Remove the timer after completing all subdivisions
-	timer.queue_free()
+		if i == 0:
+			# Call the function immediately for the first beat with the given args
+			bullet_instance.callv(function_name, args_array_of_arrays[i])
+			add_child(bullet_instance)
+		else:
+			# Call _delay_shoot for subsequent beats with delay
+			_delay_shoot(function_name, bullet_instance, interval * i, args_array_of_arrays[i])
+
+
 
 
 """
@@ -176,4 +201,21 @@ func subdivide_beat(function: Callable, subdivide_times: int, args_array: Array)
 		var bullet_instance = bullet_dict.get("Base Shockwave").instantiate()
 		_delay_shoot(bullet_instance.initialize, bullet_instance, beat_length/2, [.839, Vector2(200,200), Vector2(20,20),20, 0, 1, 2, 0])
 		add_child.call(bullet_instance)
+	
+	# Subdivide:
+		var bullet_instance = bullet_dict.get("Base Bullet").instantiate()
+		var args_arr = [[boss.position,Vector2(0,1000),4],[boss.position,Vector2(0,1000),4],[boss.position,Vector2(0,1000),4],[boss.position,Vector2(0,1000),4]]
+		_subdivide_beat("initialize",bullet_instance,4, args_arr)
 	"""
+
+func _player_died():
+	music_player.stop()
+	get_tree().call_group("Bullet", "queue_free")
+	anim_player.play("died")
+
+func _restart():
+	player._reset()
+	anim_player.play("RESET")
+	boss_anim.play("RESET")
+	music_player.play(8*beat_length)
+	anim_player.play("8-12")

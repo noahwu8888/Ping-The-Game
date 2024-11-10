@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://bhisr6kus5mgv"]
+[gd_scene load_steps=37 format=4 uid="uid://bhisr6kus5mgv"]
 
 [ext_resource type="Script" path="res://Scripts/main.gd" id="1_0spgk"]
 [ext_resource type="Texture2D" uid="uid://y8bk3xg2x4ti" path="res://Art/Background.JPG" id="1_q2mg3"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://bgr01x5qpekhx" path="res://Prefabs/Bullets/DragBullet.tscn" id="5_ikgl6"]
 [ext_resource type="PackedScene" uid="uid://d1qkaniirxusj" path="res://Prefabs/Bullets/OrbitalBullet.tscn" id="6_1r674"]
 [ext_resource type="PackedScene" uid="uid://bne3jiiophop4" path="res://Prefabs/Bullets/OrbitalLaser.tscn" id="7_2lkti"]
+[ext_resource type="PackedScene" uid="uid://cr70v6yw6wqho" path="res://Prefabs/Bullets/AsyncShockwave.tscn" id="8_bpucy"]
 [ext_resource type="Texture2D" uid="uid://vh3sp6uvmpn6" path="res://Art/Boss/BossSpin-Sheet.png" id="9_c0auc"]
 [ext_resource type="Script" path="res://flash.gd" id="10_djp3m"]
 [ext_resource type="PackedScene" uid="uid://b0ohgmrm5bjel" path="res://Prefabs/Player.tscn" id="10_hpi1y"]
@@ -331,7 +332,7 @@ tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false]
+"values": [true]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -343,7 +344,19 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Flash:color")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_huid2"]
@@ -451,6 +464,18 @@ tracks/4/keys = {
 "update": 1,
 "values": [true, false, true]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Boss:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_pgocc"]
 resource_name = "25-26"
@@ -527,17 +552,50 @@ tracks/5/keys = {
 "values": [true, false]
 }
 
+[sub_resource type="Animation" id="Animation_ujk22"]
+resource_name = "died"
+length = 2.0
+step = 0.25
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_restart"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Flash:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_811l0"]
 _data = {
 "13-24": SubResource("Animation_huid2"),
 "25-26": SubResource("Animation_pgocc"),
 "8-12": SubResource("Animation_1cwiu"),
-"RESET": SubResource("Animation_cjv6v")
+"RESET": SubResource("Animation_cjv6v"),
+"died": SubResource("Animation_ujk22")
 }
 
 [node name="main" type="Node2D" groups=["Listener"]]
 script = ExtResource("1_0spgk")
 bullet_dict = {
+"Async Shockwave": ExtResource("8_bpucy"),
 "Base Bullet": ExtResource("2_yj7tf"),
 "Base Laser": ExtResource("3_rxgi5"),
 "Base Shockwave": ExtResource("4_rrvy7"),
@@ -554,7 +612,6 @@ audio_stream_player = NodePath("../MusicPlayer")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_5k0dh")
-volume_db = -80.0
 
 [node name="Flash" type="ColorRect" parent="."]
 z_index = 5
@@ -634,6 +691,7 @@ one_shot = true
 position = Vector2(960, 540)
 
 [node name="Boss" type="Area2D" parent="."]
+visible = false
 position = Vector2(960, 540)
 scale = Vector2(2, 2)
 collision_mask = 3
@@ -641,6 +699,7 @@ collision_mask = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boss"]
 scale = Vector2(9, 8.05)
 shape = SubResource("CircleShape2D_0mcl4")
+disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Boss"]
 z_index = 2
@@ -676,3 +735,4 @@ speed_scale = 1.191
 [connection signal="pressed" from="MainMenu/Button" to="MainMenu/Button" method="_on_pressed"]
 [connection signal="timeout" from="MainMenu/Button/LateTimer" to="MainMenu/Button" method="_on_late_timer_timeout"]
 [connection signal="timeout" from="MainMenu/Button/BeatLockoutTimer" to="MainMenu/Button" method="_on_lockout_timer_timeout"]
+[connection signal="died" from="Player" to="." method="_player_died"]

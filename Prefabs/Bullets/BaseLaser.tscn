@@ -96,7 +96,7 @@ _data = {
 "warning": SubResource("Animation_28rux")
 }
 
-[node name="Laser" type="RigidBody2D"]
+[node name="Laser" type="RigidBody2D" groups=["Bullet", "Listener"]]
 collision_mask = 2
 mass = 0.001
 physics_material_override = SubResource("PhysicsMaterial_lewiw")

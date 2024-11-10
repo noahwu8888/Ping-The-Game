@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://bnvq32odtmlrf"]
+[gd_scene load_steps=8 format=3 uid="uid://cr70v6yw6wqho"]
 
-[ext_resource type="Script" path="res://Scripts/Bullets/Shockwave.gd" id="1_7xxri"]
-[ext_resource type="Texture2D" uid="uid://co8ump70o772c" path="res://Art/Circle.png" id="2_57w56"]
+[ext_resource type="Script" path="res://Scripts/Bullets/Async_Shockwave.gd" id="1_m8gvs"]
+[ext_resource type="Texture2D" uid="uid://co8ump70o772c" path="res://Art/Circle.png" id="2_84dsa"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0qk5j"]
 
@@ -84,8 +84,8 @@ _data = {
 "warning": SubResource("Animation_p2sfx")
 }
 
-[node name="BaseShockwave" type="Node2D" groups=["Bullet", "Listener"]]
-script = ExtResource("1_7xxri")
+[node name="BaseShockwave" type="Node2D" groups=["Bullet"]]
+script = ExtResource("1_m8gvs")
 
 [node name="Shockwave" type="RigidBody2D" parent="."]
 visible = false
@@ -99,7 +99,7 @@ disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Shockwave/CollisionShape2D"]
 scale = Vector2(0.02, 0.02)
-texture = ExtResource("2_57w56")
+texture = ExtResource("2_84dsa")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -113,4 +113,9 @@ one_shot = true
 [node name="WarningSprite" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.25098)
 scale = Vector2(0.02, 0.02)
-texture = ExtResource("2_57w56")
+texture = ExtResource("2_84dsa")
+
+[node name="WarningTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="WarningTimer" to="." method="_on_warning_timer_timeout"]
