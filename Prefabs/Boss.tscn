@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cs2sxxhui7iac"]
 
-[ext_resource type="Texture2D" uid="uid://bdw8lpa4og5bq" path="res://icon.svg" id="1_nglaw"]
+[ext_resource type="Texture2D" uid="uid://c230meqaavb40" path="res://icon.svg" id="1_nglaw"]
 [ext_resource type="Script" path="res://Scripts/Characters/boss_test.gd" id="1_s8wab"]
 [ext_resource type="PackedScene" uid="uid://d0apjdkbfeayu" path="res://Prefabs/Bullets/BaseBullet.tscn" id="2_0g634"]
 [ext_resource type="PackedScene" uid="uid://gyd67ksavbat" path="res://Prefabs/Bullets/BaseLaser.tscn" id="3_gj88i"]

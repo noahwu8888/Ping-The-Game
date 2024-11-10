@@ -44,7 +44,13 @@ func _ready() -> void:
 	anim_player.play("warning")
 	
 	scale = total_scale
-	
+	if(warning_beats == 0):
+		active = true
+		warning_sprite.visible = false  # Hide the warning when activating
+		shockwave.visible = true
+		collision_shape.visible = true  # Show shockwave for visual effect
+		collision_shape.disabled = false  # Enable collision
+		despawn_timer.start()
 	# Connect RhythmNotifier for beat events
 	get_tree().root.get_node("main").get_node("RhythmNotifier").connect("beat", _on_beat_heard)
 

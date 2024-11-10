@@ -4,6 +4,7 @@ extends Button
 
 @onready var lockout_timer = $BeatLockoutTimer
 @onready var late_timer = $LateTimer
+@onready var background = $"../TextureRect"
 
 # Define the leeway time within which a click will count as successful
 @export var leeway: float = 0.3
@@ -40,7 +41,7 @@ func _on_beat_heard(beat: int) -> void:
 	success_window = true
 	_start_beat_check()
 	current_beat = beat
-	print(current_beat)
+	#print(current_beat)
 	if(current_beat >= 2):
 		music_player.volume_db = 0
 
@@ -68,7 +69,7 @@ func _on_pressed():
 			leave_sfx.play()
 		is_discordo = !is_discordo
 	else:
-		if(success_count <= 2):
+		if(success_count < 2):
 		# Create a new AudioStreamPlayer instance to play the ping sound
 			var ping_instance = AudioStreamPlayer.new()
 			ping_instance.volume_db = -20
@@ -102,14 +103,18 @@ func _check_has_started():
 	if(success_count == -1):
 		music_player.play()
 		success_count += 1
-		print("started music")
 		_start_beat_check()
 	elif success_window:
 		#check for unwanted presses
 		success_count += 1
 		success_window = false
 		late_timer.stop()
-		print("Success " + str(success_count))
+		var new_color = 1.0 - float(success_count) / 9
+		background.self_modulate = Color(new_color,new_color,new_color)
+		if (success_count == 9):
+			emit_signal("start_fight")
+			self.visible = false
+			
 	else:
 		_fail()
 
@@ -119,9 +124,12 @@ func _fail():
 	music_player.stop()
 	music_player.volume_db = -80
 	#print("Fail")
+	var new_color = 1.0 - float(success_count) / 9
+	#print(new_color)
+	background.self_modulate = Color(new_color,new_color,new_color)
 
 func _on_late_timer_timeout() -> void:
-	if success_count != current_beat:
+	if (success_count != current_beat) and (success_count < 9):
 		_fail()
 	success_window = false
 

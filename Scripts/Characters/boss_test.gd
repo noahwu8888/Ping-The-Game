@@ -14,8 +14,7 @@ func _spawn(direction: Vector2):
 	get_parent().add_child.call_deferred(bullet_instance)
 
 func _on_beat_heard(beat: int):
-	var directions: Array = [[Vector2(200,-200)],[Vector2(200,200)],[Vector2(-200,200)],[Vector2(-200,-200)]]
-	subdivide_beat(_spawn, 4, directions)
+	pass
 	"""
 	#Multishot
 	var num_bullets = 20
@@ -26,6 +25,8 @@ func _on_beat_heard(beat: int):
 	shoot_bullets_in_arc(bullet_reference, num_bullets, radius_vector, arc_length, position, 400, 3)
 	
 	
+	var directions: Array = [[Vector2(200,-200)],[Vector2(200,200)],[Vector2(-200,200)],[Vector2(-200,-200)]]
+	subdivide_beat(_spawn, 4, directions)
 	
 	#Spawn Shockwave
 	var bullet_instance = bullet_dict.get("Base Shockwave").instantiate()
