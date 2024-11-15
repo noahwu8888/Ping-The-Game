@@ -292,7 +292,7 @@ func _beat_bullets2(beat:int):
 			var spawn_rotation_degrees = (player.position - screen_center.position).angle() * 180 / PI + 90
 			print(spawn_rotation_degrees)
 			# Initialize the laser with the calculated rotation
-			bullet_instance.initialize(.839, screen_center.position, Vector2(1, 10), spawn_rotation_degrees, .5, 1)
+			bullet_instance.initialize(.839, screen_center.position, Vector2(10, 10), spawn_rotation_degrees, .5, 1)
 			add_child(bullet_instance)
 			
 			var bullet_instance2 = bullet_dict.get("Orbital Bullet").instantiate()
