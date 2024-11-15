@@ -35,6 +35,9 @@ func _ready() -> void:
 	lockout_timer.wait_time = beat_length - leeway
 	late_timer.wait_time = leeway
 	
+	var new_color = 1.0 - float(success_count) / 9
+	#print(new_color)
+	background.self_modulate = Color(new_color,new_color,new_color)
 	connect("start_fight", get_tree().root.get_node("main")._start_fight)
 
 func _on_beat_heard(beat: int) -> void:
@@ -112,7 +115,7 @@ func _check_has_started():
 		var new_color = 1.0 - float(success_count) / 9
 		if(success_count > 3):
 			background.self_modulate = Color(new_color,new_color,new_color)
-		if (success_count == 9):
+		if (success_count == 8):
 			emit_signal("start_fight")
 			self.visible = false
 			
@@ -130,7 +133,7 @@ func _fail():
 	background.self_modulate = Color(new_color,new_color,new_color)
 
 func _on_late_timer_timeout() -> void:
-	if (success_count != current_beat) and (success_count < 9):
+	if (success_count != current_beat) and (success_count < 8):
 		_fail()
 	success_window = false
 

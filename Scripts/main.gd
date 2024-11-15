@@ -5,7 +5,7 @@ extends Node2D
 @export var beat_length = 0.839
 var screen_size: Vector2
 
-
+@onready var camera = $Camera2D
 @onready var music_player = $MusicPlayer
 @onready var main_menu = $MainMenu
 @onready var boss = $Boss
@@ -15,6 +15,8 @@ var screen_size: Vector2
 @onready var player = $Player
 
 @onready var flash = $Flash
+
+@onready var background = $Background
 
 @onready var screen_center = $CenterOfScreen
 
@@ -36,6 +38,8 @@ func _process(delta: float) -> void:
 func _start_fight():
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	player.visible = true
+	main_menu.visible = false
+	background.visible = true
 
 func _on_beat_heard(beat:int):
 	_beat_anim(beat)
@@ -55,9 +59,9 @@ func _beat_anim(beat:int):
 		23:
 			boss_anim.play("RESET")
 			boss.visible = true
-			boss_collision.disabled = false
 		25:
 			flash.flash_screen()
+			camera.apply_shake(beat_length)
 			anim_player.play("25-26")
 			boss_anim.play("roar")
 		32:
@@ -67,32 +71,44 @@ func _beat_anim(beat:int):
 		33:
 			boss_anim.play("RESET")
 			boss.visible = true
-			boss_collision.disabled = false
 		34:
+			camera.apply_shake(beat_length/2)
 			boss_anim.play("bounce")
+		35,36,37:
+			camera.shake_strength /= 2
+			camera.apply_shake(beat_length/2)
 		38:
 			boss_anim.play("spin")
 		41:
+			camera.shake_strength *= 2
 			anim_player.play("41-42")
 			boss_anim.play("roar")
-		42:
+			camera.apply_shake(beat_length)
 			flash.flash_screen()
 		43:
 			anim_player.play("43-46")
 			boss_anim.play("spin")
+			camera.apply_shake(beat_length/2)
 		44,45,46:
+			camera.apply_shake(beat_length/2)
 			boss_anim.stop()
 			boss_anim.play("spin")
 		47:
 			boss.visible = true
 			boss_anim.play("loop_spin")
 			anim_player.play("47-49")
+			camera.apply_shake(beat_length/2)
 		48:
 			boss_anim.play("RESET")
 			boss.visible = true
 			boss_collision.disabled = false
+			camera.apply_shake(beat_length/2)
 		49:
+			camera.apply_shake(beat_length/2)
 			boss_anim.play("bounce")
+		50,51,52,53:
+			camera.shake_strength /= 2
+			camera.apply_shake(beat_length/2)
 		
 		54:
 			boss_anim.play("spin")
@@ -100,9 +116,11 @@ func _beat_anim(beat:int):
 		56:
 			anim_player.play("57-59")
 		
-		59:
+		57:
 			flash.flash_screen()
-			
+		59:
+			anim_player.play("Credits")
+
 func _beat_bullets(beat:int):
 	match beat:
 		14,15,16,17,18,19,20,21,22:
@@ -158,7 +176,6 @@ func _beat_bullets(beat:int):
 			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
 			var spawn_pos = screen_center.position
 			bullet_instance3.initialize(.839, spawn_pos,Vector2(20,2000), 90, 0.0001, 1)
-			
 			add_child.call(bullet_instance3)
 		
 		35,36,37:
@@ -220,6 +237,7 @@ func _beat_bullets(beat:int):
 			var bullet_instance3 = bullet_dict.get("Base Laser").instantiate()
 			var spawn_pos = screen_center.position
 			bullet_instance3.initialize(.839, spawn_pos,Vector2(20,2000), 90, 0.0001, 1)
+			add_child.call(bullet_instance3)
 		47:
 			var bullet_instance = bullet_dict.get("Base Shockwave").instantiate()
 			bullet_instance.initialize(.839, screen_center.position, Vector2(40,40),20, 0, 1, beat_length, 2)
@@ -283,7 +301,7 @@ func _beat_bullets2(beat:int):
 			var num_bullets = 10
 			var radius_vector = screen_center.position - player.position
 			var arc_length = 1
-			var bullet_reference = bullet_dict.get("Base Bullet").instantiate()
+			var bullet_reference = bullet_dict.get("Drag Bullet").instantiate()
 			shoot_bullets_in_arc(bullet_reference, num_bullets, radius_vector, arc_length, boss.position, 600, 3)
 			
 		49,50,51,52:

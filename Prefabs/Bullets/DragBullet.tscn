@@ -13,10 +13,11 @@ initial_velocity = Vector2(100, 100)
 despawn_time = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(3, 3)
 shape = SubResource("CircleShape2D_gyyow")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.02, 0.02)
+scale = Vector2(0.06, 0.06)
 texture = ExtResource("2_hmuge")
 
 [node name="DespawnTimer" type="Timer" parent="."]
